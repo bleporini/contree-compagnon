@@ -1,0 +1,233 @@
+
+<h1>Annonces</h1>
+<style>
+    div {
+        /*
+        border: 1px solid green;
+        */
+    }
+    table.annonces td{
+        text-align: center;
+    }
+    table.annonces button {
+        width: 7em;
+    }
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col" id="score">
+
+        </div>
+        <div class="col">
+            <table class="annonces caption-top">
+                <tr>
+                    <th colspan="2">
+                        <h3>
+                            Joueur:
+                            <small class="text-body-secondary" id="currentPlayer">Jane</small>
+                        </h3>
+                    </th>
+                    <th colspan="2">
+                        <h3>
+                            Partance:
+                            <small class="text-body-secondary" id="partance">Jane</small>
+                        </h3>
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="80" data-suit="spade">80 <i class="bi bi-suit-spade-fill"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="80" data-suit="heart">80 <i class="bi bi-suit-heart-fill text-danger"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="80" data-suit="diamond">80 <i class="bi bi-suit-diamond-fill text-danger"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="80" data-suit="club">80 <i class="bi bi-suit-club-fill"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="90" data-suit="spade">90 <i class="bi bi-suit-spade-fill"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="90" data-suit="heart">90 <i class="bi bi-suit-heart-fill text-danger"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="90" data-suit="diamond">90 <i class="bi bi-suit-diamond-fill text-danger"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="90" data-suit="club">90 <i class="bi bi-suit-club-fill"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="100" data-suit="spade">100 <i class="bi bi-suit-spade-fill"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="100" data-suit="heart">100 <i class="bi bi-suit-heart-fill text-danger"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="100" data-suit="diamond">100 <i class="bi bi-suit-diamond-fill text-danger"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="100" data-suit="club">100 <i class="bi bi-suit-club-fill"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="110" data-suit="spade">110 <i class="bi bi-suit-spade-fill"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="110" data-suit="heart">110 <i class="bi bi-suit-heart-fill text-danger"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="110" data-suit="diamond">110 <i class="bi bi-suit-diamond-fill text-danger"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="110" data-suit="club">110 <i class="bi bi-suit-club-fill"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="120" data-suit="spade">120 <i class="bi bi-suit-spade-fill"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="120" data-suit="heart">120 <i class="bi bi-suit-heart-fill text-danger"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="120" data-suit="diamond">120 <i class="bi bi-suit-diamond-fill text-danger"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="120" data-suit="club">120 <i class="bi bi-suit-club-fill"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="130" data-suit="spade">130 <i class="bi bi-suit-spade-fill"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="130" data-suit="heart">130 <i class="bi bi-suit-heart-fill text-danger"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="130" data-suit="diamond">130 <i class="bi bi-suit-diamond-fill text-danger"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="130" data-suit="club">130 <i class="bi bi-suit-club-fill"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="140" data-suit="spade">140 <i class="bi bi-suit-spade-fill"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="140" data-suit="heart">140 <i class="bi bi-suit-heart-fill text-danger"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="140" data-suit="diamond">140 <i class="bi bi-suit-diamond-fill text-danger"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="140" data-suit="club">140 <i class="bi bi-suit-club-fill"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="150" data-suit="spade">150 <i class="bi bi-suit-spade-fill"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="150" data-suit="heart">150 <i class="bi bi-suit-heart-fill text-danger"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="150" data-suit="diamond">150 <i class="bi bi-suit-diamond-fill text-danger"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="150" data-suit="club">150 <i class="bi bi-suit-club-fill"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="160" data-suit="spade">160 <i class="bi bi-suit-spade-fill"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="160" data-suit="heart">160 <i class="bi bi-suit-heart-fill text-danger"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="160" data-suit="diamond">160 <i class="bi bi-suit-diamond-fill text-danger"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="160" data-suit="club">160 <i class="bi bi-suit-club-fill"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="170" data-suit="spade">170 <i class="bi bi-suit-spade-fill"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="170" data-suit="heart">170 <i class="bi bi-suit-heart-fill text-danger"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="170" data-suit="diamond">170 <i class="bi bi-suit-diamond-fill text-danger"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="170" data-suit="club">170 <i class="bi bi-suit-club-fill"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="180" data-suit="spade">180 <i class="bi bi-suit-spade-fill"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="180" data-suit="heart">180 <i class="bi bi-suit-heart-fill text-danger"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="180" data-suit="diamond">180 <i class="bi bi-suit-diamond-fill text-danger"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="180" data-suit="club">180 <i class="bi bi-suit-club-fill"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="500" data-suit="spade">Capot <i class="bi bi-suit-spade-fill"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="500" data-suit="heart">Capot <i class="bi bi-suit-heart-fill text-danger"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="500" data-suit="diamond">Capot <i class="bi bi-suit-diamond-fill text-danger"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary annonce" data-amount="500" data-suit="club">Capot <i class="bi bi-suit-club-fill"></i></button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col">
+            <div class="row">
+                <div class="col">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-lg btn-info" id="passe">Passe </button>
+                        <button class="btn btn-lg btn-danger" id="contre">Contré</button>
+                        <button class="btn btn-lg btn-danger" id="surContre">Sur contré</button>
+                    </div>
+
+                </div>
+                <div class="col">
+                    <div class="d-grid gap-2">
+                        <button id="undoAnnonceBtn" class="btn btn-lg btn-secondary"><i class="bi bi-arrow-counterclockwise"></i></button>
+                        <button class="btn btn-lg btn-success" id="okAnnonces"><i class="bi bi-check-lg"></i></button>
+                        <button class="btn btn-lg btn-success" id="newGame">Nouvelle partie</i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="row text-center">
+                <h3 id="currentAnnonce">John : 80 <i class="bi bi-suit-club-fill"></i></h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

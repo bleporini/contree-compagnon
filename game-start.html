@@ -1,0 +1,55 @@
+<h1>Nouvelle partie</h1>
+<form id="newGameForm">
+    <div class="container">
+        <div class="row" id="new-game">
+            <div class="col">
+                <table class="new-game">
+                    <tr>
+                        <td></td>
+                        <td >
+                            <label class="visually-hidden" for="north">Nord</label>
+                            <input type="text" class="form-control" id="north" placeholder="Nord">
+                            <input type="radio" class="btn-check" name="game_start" id="pnorth" value="north" autocomplete="off" >
+                            <label class="btn btn-outline-primary" for="pnorth">Partance</label>
+                        </td>
+                        <td class="wise"><i class="bi bi-arrow-90deg-left fs1"></i></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="west" class="visually-hidden">Ouest</label>
+                            <input type="text" class="form-control" id="west" placeholder="Ouest">
+                            <input type="radio" class="btn-check" name="game_start" id="pwest" value="west" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="pwest">Partance</label>
+                        </td>
+                        <td>
+                            <img src="img/tapis.jpeg" class="img-responsive carpet" alt="tapis"/>
+                        </td>
+                        <td>
+                            <label class="visually-hidden" for="east">Est</label>
+                            <input type="text" class="form-control" id="east" placeholder="Est">
+                            <input type="radio" class="btn-check" name="game_start" id="peast" value="east" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="peast">Partance</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td >
+                            <label class="visually-hidden" for="south">Sud</label>
+                            <input type="text" class="form-control" id="south" placeholder="Sud">
+                            <input type="radio" class="btn-check" name="game_start" id="psouth" value="south" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="psouth">Partance</label>
+
+                        </td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-success btn-lg disabled" id="startGame">Démarrer</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
