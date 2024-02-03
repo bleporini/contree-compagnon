@@ -28,7 +28,8 @@ const buildRepository = ({eventLog, state}) => {
 
 const defaultStorageProvider = {
     load: () => localStorage.getItem('stateRepository'),
-    save: repository => localStorage.setItem('stateRepository', JSON.stringify(repository))
+    save: repository => localStorage.setItem('stateRepository', JSON.stringify(repository)) ,
+    reset: () => localStorage.removeItem('stateRepository')
 };
 
 const stateRepositoryBuilder = (app, storageProvider = defaultStorageProvider) => {
@@ -84,6 +85,7 @@ const stateRepositoryBuilder = (app, storageProvider = defaultStorageProvider) =
         stateComponent: component,
         getRepository: getRepository,
         save: storageProvider.save,
+        reset:storageProvider.reset,
         saveState: saveState,
         withState: tx => {
             const state = getRepository().state;

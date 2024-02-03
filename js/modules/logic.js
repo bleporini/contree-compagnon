@@ -5,7 +5,7 @@ import {stages} from "./state.js";
 const verifyNewGameDefinition =  state => {
 
     const allPlayersValid = ['north', 'south', 'east', 'west'].reduce(
-        (acc, curr) => acc && state.players[curr] && state.players[curr].length > 0,
+        (acc, curr) => acc && state.players && state.players[curr] && state.players[curr].length > 0,
         true
     );
 
@@ -26,6 +26,12 @@ const newGameLogic = (component, stateRepository) => {
             Events.teamCompleted.buildEvent()
         )
     };
+    component.addEventListener(
+        Events.reset.event,
+        () => {
+            stateRepository.reset();
+        }
+    );
     stateRepository.withState(state => verifyNewGameDefinition(state));
 
     ['north', 'south', 'east', 'west'].forEach(e => {

@@ -12,6 +12,7 @@ const Events = {
     dummy: buildEvent('dummy'),
     stateUpdated: buildEvent('stateUpdated'),
     init: buildEvent('init'),
+    reset: buildEvent('reset'),
     newGame: buildEvent('newGame'),
     northPlayerDefined: buildEventValue('northPlayerDefined'),
     southPlayerDefined: buildEventValue('southPlayerDefined'),

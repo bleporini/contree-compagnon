@@ -1,55 +1,71 @@
-<h1>Nouvelle partie</h1>
-<form id="newGameForm">
-    <div class="container">
-        <div class="row" id="new-game">
-            <div class="col">
-                <table class="new-game">
-                    <tr>
-                        <td></td>
-                        <td >
-                            <label class="visually-hidden" for="north">Nord</label>
-                            <input type="text" class="form-control" id="north" placeholder="Nord">
-                            <input type="radio" class="btn-check" name="game_start" id="pnorth" value="north" autocomplete="off" >
-                            <label class="btn btn-outline-primary" for="pnorth">Partance</label>
-                        </td>
-                        <td class="wise"><i class="bi bi-arrow-90deg-left fs1"></i></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="west" class="visually-hidden">Ouest</label>
-                            <input type="text" class="form-control" id="west" placeholder="Ouest">
-                            <input type="radio" class="btn-check" name="game_start" id="pwest" value="west" autocomplete="off">
-                            <label class="btn btn-outline-primary" for="pwest">Partance</label>
-                        </td>
-                        <td>
-                            <img src="img/tapis.jpeg" class="img-responsive carpet" alt="tapis"/>
-                        </td>
-                        <td>
-                            <label class="visually-hidden" for="east">Est</label>
-                            <input type="text" class="form-control" id="east" placeholder="Est">
-                            <input type="radio" class="btn-check" name="game_start" id="peast" value="east" autocomplete="off">
-                            <label class="btn btn-outline-primary" for="peast">Partance</label>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td >
-                            <label class="visually-hidden" for="south">Sud</label>
-                            <input type="text" class="form-control" id="south" placeholder="Sud">
-                            <input type="radio" class="btn-check" name="game_start" id="psouth" value="south" autocomplete="off">
-                            <label class="btn btn-outline-primary" for="psouth">Partance</label>
 
-                        </td>
-                        <td></td>
-                    </tr>
-                </table>
+<ons-page id="game-start">
+    <style type="text/css">
+        ons-input.newGame input{
+            text-align: center;
+        }
+    </style>
+    <ons-toolbar id="home-toolbar">
+        <div class="center">Nouvelle partie</div>
+    </ons-toolbar>
+
+        <section>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <form id="newGameForm">
+                    <ons-card>
+                        <div class="title">Equipe 1:</div>
+                        <ons-input id="north" modifier="underbar" class="newGame" placeholder="Nord" float></ons-input>
+                        <ons-input id="south" modifier="underbar" class="newGame" placeholder="Sud" float></ons-input>
+                    </ons-card>
+                    <ons-card>
+                        <div class="title">Equipe 2:</div>
+                        <ons-input id="west" modifier="underbar" class="newGame" placeholder="Ouest" float></ons-input>
+                        <ons-input id="east" modifier="underbar" class="newGame" placeholder="Est" float></ons-input>
+                    </ons-card>
+                    <p>
+                    </p>
+                    <ons-list>
+                        <ons-list-item tappable>
+                            <label class="left">
+                                <ons-radio name="partance" input-id="northPartance" value="north"></ons-radio>
+                            </label>
+                            <label for="northPartance" class="center">
+                                Nord
+                            </label>
+                        </ons-list-item>
+                        <ons-list-item tappable>
+                            <label class="left">
+                                <ons-radio name="partance" input-id="westPartance" value="west"></ons-radio>
+                            </label>
+                            <label for="westPartance" class="center">
+                                Ouest
+                            </label>
+                        </ons-list-item>
+                        <ons-list-item tappable>
+                            <label class="left">
+                                <ons-radio name="partance" input-id="southPartance" value="south"></ons-radio>
+                            </label>
+                            <label for="southPartance" class="center">
+                                Sud
+                            </label>
+                        </ons-list-item>
+                        <ons-list-item tappable>
+                            <label class="left">
+                                <ons-radio name="partance" input-id="eastPartance" value="east"></ons-radio>
+                            </label>
+                            <label for="eastPartance" class="center">
+                                Est
+                            </label>
+                        </ons-list-item>
+                    </ons-list>
+                    <p style="margin-top: 30px;">
+                        <ons-button id="startGame">Lancer la partie!</ons-button>
+                    </p>
+                </form>
             </div>
-            <div class="col">
-                <button type="button" class="btn btn-success btn-lg disabled" id="startGame">Démarrer</button>
-            </div>
-        </div>
-    </div>
-</form>
-
-
-
+        </section>
+    <ons-fab id="reset" position="bottom right">
+        <ons-icon icon="fa-trash-can"></ons-icon>
+    </ons-fab>
+</ons-page>

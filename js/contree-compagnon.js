@@ -2,14 +2,14 @@ import stateRepositoryBuilder from './modules/state.js';
 import ui from './modules/ui.js';
 import logic from './modules/logic.js';
 
+/*
 document.onreadystatechange = () => {
     if (document.readyState === 'complete')
         start();
 };
+*/
 
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('content loaded');
-});
+
 
 const appRoot = document.createElement('app');
 const app = document.createElement('endpoint');
@@ -51,3 +51,5 @@ const start = () => {
     ui.start(app);
 
 };
+
+start();
