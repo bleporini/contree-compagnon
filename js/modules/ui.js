@@ -1,4 +1,4 @@
-import Events from './Events.js';
+import Events from './events.js';
 import {stages} from "./state.js";
 
 
