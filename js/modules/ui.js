@@ -2,9 +2,23 @@ import Events from './events.js';
 import {stages} from "./state.js";
 
 
+const downloadDebug = () => {
+    const element = document.createElement('a');
+    element.setAttribute('href', 'data:application/json;charset=utf-8,' +
+        localStorage.getItem('stateRepository'));
+    element.setAttribute('download', 'debug.json');
 
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+};
 
 const loadWelcome = (app) => {
+    document.getElementById('debug').onclick = downloadDebug;
+
     const navigator = document.getElementById('navigator');
     document.getElementById('start-new-game').onclick = () => {
         const evt = Events.newGame.buildEvent();
@@ -21,6 +35,8 @@ const setButtonDisable = (btn, disable) => () => {
 
 
 const loadNewGame = (app) =>{
+    document.getElementById('debug').onclick = downloadDebug;
+
     const state = app.state();
     const startBtn = document.getElementById('startGame');
     startBtn.onclick = () =>
@@ -75,6 +91,8 @@ const contreSign = '<i class="fa-solid fa-circle-exclamation" style="color: oran
 const surContreSign = '<i class="fa-solid text-danger fa-triangle-exclamation"></i>';
 
 const loadScore = (app) => {
+    document.getElementById('debug').onclick = downloadDebug;
+
     const {
         players:{north, south, east, west},
         score:{maines, total:{ns:nsTotal, ew:ewTotal}} = {maines:[], total:{ns:0, ew:0}}
@@ -97,6 +115,7 @@ const loadScore = (app) => {
 };
 
 const loadAnnonces = (app, container) => {
+    document.getElementById('debug').onclick = downloadDebug;
     const annoncesBtns = Array.from(
         document.querySelectorAll('ons-button.annonce')
     );
@@ -259,6 +278,8 @@ const loadAnnonces = (app, container) => {
 };
 
 const loadMaine = (app, container) => {
+    document.getElementById('debug').onclick = downloadDebug;
+
     const {
         firstStartPosition,
         annonce:{amount, suit, player, contre, surContre},
@@ -351,18 +372,7 @@ const ui = {
             Events.annoncesStarted.event,
             (e) => navigator.resetToPage('annonces.html')
         );
-/*
-        app.addEventListener(
-            Events.init.event,
-            () => loadWelcome(app, container)
-        );
-        app.addEventListener(
-            Events.maineStarted.event,
-            () => loadMaine(app, container)
-        );
-*/
 
-//        init(app);
         document.addEventListener('init', ({target: {id: pageId}}) => {
             switch (pageId) {
                 case 'welcome':
