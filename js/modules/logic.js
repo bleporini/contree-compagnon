@@ -129,8 +129,8 @@ const annoncesLogic = (component, repository) => {
         Events.passe.event,
         () => {
             repository.withState(state => {
-                const passe = state.annonce && state.passe ===3 ? state.passe : state.passe +1;
-                if (passe >= 3){
+                const passe = state.passe ? state.passe +1: 1;
+                if ((state.annonce && passe === 3) || passe > 3){
                     return {
                         ...state,
                         passe,
