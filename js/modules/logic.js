@@ -238,9 +238,83 @@ const annoncesLogic = (component, repository) => {
             component.dispatchEvent(Events.stateUpdated.buildEvent())
         }
     );
+};
 
+
+
+const computeScore = ({
+                          annonce: {amount, player, contre, surContre},
+                          positions, nsScore, ewScore, belote, capot, nsPenalty, ewPenalty
+                      }) => {
+    const nsBelote = belote === 'ns' ? 20 : 0;
+    const ewBelote = belote === 'ew' ? 20 : 0;
+    const announcedCapot = amount === 500;
+    const pos = positions[player];
+    const team = (pos === 'north' || pos === 'south') ? 'ns': 'ew';
+    if(nsPenalty || ewPenalty) return {
+        effectiveNsScore: nsPenalty ? 0 : 160,
+        effectiveEwScore: ewPenalty ? 0 : 160,
+        validForm: true
+    };
+    const score = () => {
+        if (capot)
+            if (team === 'ns') return {
+                _nsScore: 162 + nsBelote,
+                _ewScore: 0
+            }; else return {
+                _nsScore: 0,
+                _ewScore: 162 + ewBelote
+            };
+        else return {
+            _nsScore: (nsScore !== undefined ? Number(nsScore) : 162 - ewScore) + nsBelote,
+            _ewScore: (ewScore !== undefined ? Number(ewScore) : 162 - nsScore) + ewBelote
+        }
+    };
+    const {_nsScore, _ewScore} = score();
+    const validForm = !(_nsScore < 0 || _ewScore < 0);
+    const nsFail = validForm && team === 'ns' && _nsScore < (amount===500?162+nsBelote:amount);
+    const ewFail = validForm && team === 'ew' && _ewScore < (amount===500?162+ewBelote:amount);
+    if(contre) {
+        const inStake = announcedCapot && surContre? 2000:
+            announcedCapot ? 1000 :
+                surContre ? 640 : 320;
+        return {
+            nsScore: _nsScore,
+            ewScore: _ewScore,
+            effectiveNsScore: validForm && (ewFail || (team === 'ns' && !nsFail)) ? inStake + ewBelote + nsBelote : 0,
+            effectiveEwScore: validForm && (nsFail || (team === 'ew' && !ewFail)) ? inStake + ewBelote + nsBelote : 0,
+            nsFail,
+            ewFail,
+            validForm
+        };
+    }
+    if(capot){ //TODO refactor to unify capot and contre sections
+        const score = (
+            announcedCapot && surContre ? 2000 :
+                announcedCapot && contre ? 1000 :
+                    announcedCapot ? 500 : 250
+        ) + nsBelote + ewBelote;
+        return {
+            effectiveNsScore: team === 'ns' ? score : 0,
+            effectiveEwScore: team === 'ew' ? score : 0,
+            validForm:true
+        }
+    }
+    const inStake = (amount === 500?amount: 160);
+    const effectiveNsScore = nsFail ? 0 : ewFail ? inStake+ewBelote+nsBelote : Math.round(_nsScore/10)*10 ;
+    const effectiveEwScore = ewFail ? 0 : nsFail ? inStake+nsBelote+ewBelote : Math.round(_ewScore/10)*10 ;
+    return {
+        nsScore: _nsScore,
+        ewScore: _ewScore,
+        effectiveNsScore,
+        effectiveEwScore,
+        nsFail,
+        ewFail,
+        validForm
+    }
 
 };
+
 
 const maineLogic = (component, repository) => {
 
@@ -264,26 +338,8 @@ const maineLogic = (component, repository) => {
 
     component.addEventListener(
         Events.maineFinished.event,
-        ({detail: {belote, score: maineScore}}) => {
+        ({detail: maine}) => {
             repository.withState(state => {
-                const [attacker, defender] = maineRoles(state);
-                const {annonce:{contre=false, surContre=false}} = state;
-                const contreAmount = contre && surContre ? 640 : contre ? 320 : 0;
-                const {winnerScore, loserScore} = (() => {
-                    if (contre){
-                        const winnerScore = contreAmount + (belote === attacker ? 20 : 0);
-                        const loserScore = belote === defender ? 20 : 0;
-                        return {winnerScore, loserScore};
-                    }else {
-                        const winnerScore = Math.round(maineScore / 10) * 10 + (belote === attacker ? 20 : 0);
-                        const remainder = 162 - maineScore;
-                        const loserScore = Math.round(remainder / 10) * 10 + (belote === defender ? 20 : 0);
-                        return {winnerScore, loserScore};
-                    }
-                })();
-                const maine = {};
-                maine[attacker] = winnerScore;
-                maine[defender] = loserScore;
                 const score = appendScore(state, maine);
                 return {
                     ...initNextMaine(state),
@@ -293,69 +349,34 @@ const maineLogic = (component, repository) => {
             component.dispatchEvent(Events.annoncesStarted.buildEvent());
         });
 
-    component.addEventListener(
-        Events.maineFinishedDedans.event,
-        ({detail: {belote}}) => {
-            repository.withState(state => {
-                const [attacker, defender] = maineRoles(state);
-                const {annonce:{amount,contre=false, surContre=false}} = state;
-                const contreAmount = amount > 180 && contre && surContre ? 2000 :
-                    amount > 180 && contre ? 1000 :
-                    contre && surContre ? 640 :
-                    contre ? 320 : 0;
-                const maine = {};
-                maine[attacker] = 0;
-                maine[defender] = (contre? contreAmount : 160) + (belote ? 20 : 0);
-                return {
-                    ...initNextMaine(state),
-                    score: appendScore(state, maine)
-                };
-            });
-            component.dispatchEvent(Events.annoncesStarted.buildEvent());
-        }
-    );
 
 
-    //TODO: manage sur-contre
-    component.addEventListener(
-        Events.maineFinishedCapot.event,
-        ({detail: {belote}}) => {
-            repository.withState(state => {
-                const [attacker, defender] = maineRoles(state);
-                const maine = {};
-                const {annonce:{amount:_amount,contre=false, surContre=false}} = state;
-                const amount = _amount >= 180 && contre && surContre ? 2000:
-                    _amount >= 180 && contre ? 1000 : 
-                        contre ? 320 : _amount;
-                maine[attacker] = (amount > 250 ? amount: 250) + (belote ? 20 : 0);
-                maine[defender] = 0;
-                return {
-                    ...initNextMaine(state),
-                    score: appendScore(state, maine)
-                };
-            });
-            component.dispatchEvent(Events.annoncesStarted.buildEvent());
-        }
-    );
-
-    const penalty = maine => {
-        repository.withState(state => {
-            return {
-                ...initNextMaine(state),
-                score: appendScore(state, maine)
-            }
-        });
-        component.dispatchEvent(Events.annoncesStarted.buildEvent());
-    };
 
 
     component.addEventListener(
-        Events.maineFinishedNsPenalty.event,
-        () => penalty({ns: 0, ew: 160})
+        Events.maineNsScoreEntered.event,
+        ({detail:{nsScore=0,belote, capot, nsPenalty, ewPenalty}}) =>
+            repository.withState(({annonce,positions} ) => {
+                component.dispatchEvent(
+                    Events.maineScoreComputed.buildEvent(
+                        computeScore({annonce, positions, nsScore, belote, capot, nsPenalty, ewPenalty})
+                    )
+                )
+
+            })
     );
     component.addEventListener(
-        Events.maineFinishedEwPenalty.event,
-        () => penalty({ns: 160, ew: 0})
+        Events.maineEwScoreEntered.event,
+        ({detail: {ewScore=0, belote, capot, nsPenalty, ewPenalty}}) =>
+            repository.withState(({annonce,positions} ) => {
+                component.dispatchEvent(
+                    Events.maineScoreComputed.buildEvent(
+                        computeScore({annonce, positions, ewScore, belote, capot, nsPenalty, ewPenalty})
+                    )
+                )
+
+            })
+
     );
 };
 
@@ -401,6 +422,6 @@ const logic = {
     }
 };
 
-export {dropAnnoncesToUndo};
+export {dropAnnoncesToUndo, computeScore};
 
 export default logic;

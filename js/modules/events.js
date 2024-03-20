@@ -35,10 +35,9 @@ const Events = {
     annoncesValidated: buildEvent('annoncesValidated'),
     maineStarted: buildEvent('maineStarted'),
     maineFinished: buildEventValue('maineFinished'),
-    maineFinishedCapot: buildEventValue('maineFinishedCapot'),
-    maineFinishedDedans: buildEventValue('maineFinishedDedans'),
-    maineFinishedNsPenalty: buildEvent('maineFinishedNsPenalty'),
-    maineFinishedEwPenalty: buildEvent('maineFinishedEwPenalty'),
+    maineNsScoreEntered: buildEventValue('maineNsScoreEntered'),
+    maineEwScoreEntered: buildEventValue('maineEwScoreEntered'),
+    maineScoreComputed: buildEventValue('maineScoreComputed'),
     all : () => Object.keys(Events)
         .filter(k => k !== 'all')
         

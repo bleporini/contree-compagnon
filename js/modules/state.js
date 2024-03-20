@@ -45,6 +45,7 @@ const stateRepositoryBuilder = (app, storageProvider = defaultStorageProvider) =
     };
 
     const saveState = state => {
+        if(!state) return; // no state provided --> exit
         const repository = getRepository();
         repository.state = state;
         storageProvider.save(repository);

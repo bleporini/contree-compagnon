@@ -312,33 +312,101 @@ const loadMaine = (app, container) => {
     document.getElementById('ewTeamPenalty').innerHTML = `${east} / ${west}`;
     document.getElementById('nsBelote').labels[0].innerHTML = `${north} / ${south}`;
     document.getElementById('ewBelote').labels[0].innerHTML = `${east} / ${west}`;
+    const nsScore = document.getElementById('nsScore');
+    const ewScore = document.getElementById('ewScore');
+    const submit = document.getElementById('sumbitMaine');
+    nsScore.labels[0].innerHTML = `${north} / ${south}`;
+    ewScore.labels[0].innerHTML = `${east} / ${west}`;
+    let nsScoreVal = nsScore.value;
+    let ewScoreVal = ewScore.value;
 
-    scoreBtns.filter(b =>
-        Number(
-            b.dataset.score
-        ) < amount
-    ).forEach(b => {
-        setButtonDisable(b, true)();
-        b.labels.forEach(l => setButtonDisable(l, true)());
+    const enterScoreBtn = document.getElementById('enterScore');
+    const capotBtn = document.getElementById('score250');
+    const nsPenalty = document.getElementById('score160ns');
+    const ewPenalty = document.getElementById('score160ew');
+    const eventDetail = () => ({
+        nsScore: nsScore.value === '' ? 0: nsScore.value ,
+        ewScore: ewScore.value === '' ? 0 : ewScore.value,
+        belote: beloteCheck.checked && beloteRadios.find(b => b.checked) ?
+            beloteRadios.find(b => b.checked).dataset.team : false,
+        capot: capotBtn.checked,
+        nsPenalty: nsPenalty.checked,
+        ewPenalty: ewPenalty.checked
     });
+
+    scoreBtns.forEach(b =>
+        b.addEventListener('click', () => {
+            const disabled = ! enterScoreBtn.checked;
+            nsScore.disabled = disabled;
+            ewScore.disabled = disabled;
+        })
+    );
+
+    nsScore.onkeyup = () => {
+        if (nsScoreVal !== nsScore.value) {
+            nsScoreVal = nsScore.value;
+            app.dispatchEvent(
+                Events.maineNsScoreEntered.buildEvent(eventDetail())
+            );
+        }
+    };
+    ewScore.onkeyup = () => {
+        if (ewScoreVal !== ewScore.value) {
+            ewScoreVal = ewScore.value;
+            app.dispatchEvent(
+                Events.maineEwScoreEntered.buildEvent(eventDetail())
+            );
+        }
+    };
+    [...beloteRadios, beloteCheck, capotBtn, nsPenalty, ewPenalty, enterScoreBtn].map(b =>
+        b.onclick = () => app.dispatchEvent(
+            Events.maineNsScoreEntered.buildEvent(eventDetail())
+        )
+    );
+
+    const effectiveNsBadge = document.getElementById('effectiveNsScore');
+    const effectiveEwBadge = document.getElementById('effectiveEwScore');
+
+    app.addEventListener(
+        Events.maineScoreComputed.event,
+        ({detail: {nsScore: ns, ewScore: ew, nsFail, ewFail, effectiveNsScore, effectiveEwScore, validForm}}) => {
+            nsScore.value = ns;
+            ewScore.value = ew;
+            if(nsFail) nsScore.classList.add('text-bg-danger'); else nsScore.classList.remove('text-bg-danger');
+            if(ewFail) ewScore.classList.add('text-bg-danger'); else ewScore.classList.remove('text-bg-danger');
+            effectiveNsBadge.innerHTML = effectiveNsScore;
+            effectiveEwBadge.innerHTML = effectiveEwScore;
+            const badgeColors = (badge, fail) => {
+                if(!validForm){
+                    badge.classList.remove('text-bg-primary');
+                    badge.classList.remove('text-bg-danger');
+                    badge.classList.add('text-bg-warning');
+                }else if (fail) {
+                    badge.classList.remove('text-bg-primary');
+                    badge.classList.remove('text-bg-warning');
+                    badge.classList.add('text-bg-danger');
+                } else {
+                    badge.classList.remove('text-bg-danger');
+                    badge.classList.remove('text-bg-warning');
+                    badge.classList.add('text-bg-primary');
+                }
+
+
+            };
+            badgeColors(effectiveNsBadge, nsFail);
+            badgeColors(effectiveEwBadge, ewFail);
+            submit.disabled = ! validForm;
+        }
+    );
+
+
     const maineForm = document.forms.maineForm;
     maineForm.addEventListener('submit', e => {
         e.preventDefault();
-        const {score} = {
-            ...scoreBtns.find(b => b.checked).dataset
-        };
-        const parsedScore = Number(score);
-        const eventData = {
-            belote: beloteCheck.checked ? beloteRadios.find(b => b.checked).dataset.team:false
-        };
-        if(score === 'capot') app.dispatchEvent(Events.maineFinishedCapot.buildEvent(eventData));
-        else if (score === 'dedans') app.dispatchEvent(Events.maineFinishedDedans.buildEvent(eventData));
-        else if (score === 'nsPenalty') app.dispatchEvent(Events.maineFinishedNsPenalty.buildEvent());
-        else if( score === 'ewPenalty') app.dispatchEvent(Events.maineFinishedEwPenalty.buildEvent());
-        else app.dispatchEvent(
+        app.dispatchEvent(
                 Events.maineFinished.buildEvent({
-                    ...eventData,
-                    score: parsedScore
+                    ns: Number(effectiveNsBadge.innerHTML),
+                    ew: Number(effectiveEwBadge.innerHTML)
                 })
             );
     });
