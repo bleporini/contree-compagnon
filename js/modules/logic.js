@@ -240,81 +240,69 @@ const annoncesLogic = (component, repository) => {
     );
 };
 
-
+const lToF = arrow => function (...args) {
+    return arrow(this, ...args);
+};
 
 const computeScore = ({
-                          annonce: {amount, player, contre, surContre},
-                          positions, nsScore, ewScore, belote, capot, nsPenalty, ewPenalty
-                      }) => {
+                             annonce: {amount, player, contre, surContre},
+                             positions, nsScore, ewScore, belote, capot, nsPenalty, ewPenalty
+                         }) => {
     const nsBelote = belote === 'ns' ? 20 : 0;
     const ewBelote = belote === 'ew' ? 20 : 0;
     const announcedCapot = amount === 500;
     const pos = positions[player];
-    const team = (pos === 'north' || pos === 'south') ? 'ns': 'ew';
-    if(nsPenalty || ewPenalty) return {
-        effectiveNsScore: nsPenalty ? 0 : 160,
-        effectiveEwScore: ewPenalty ? 0 : 160,
-        validForm: true
-    };
-    const score = () => {
-        if (capot)
-            if (team === 'ns') return {
-                _nsScore: 162 + nsBelote,
-                _ewScore: 0
-            }; else return {
-                _nsScore: 0,
-                _ewScore: 162 + ewBelote
-            };
-        else return {
-            _nsScore: (nsScore !== undefined ? Number(nsScore) : 162 - ewScore) + nsBelote,
-            _ewScore: (ewScore !== undefined ? Number(ewScore) : 162 - nsScore) + ewBelote
-        }
-    };
-    const {_nsScore, _ewScore} = score();
+    const team = (pos === 'north' || pos === 'south') ? 'ns' : 'ew';
+    const failScore = surContre && announcedCapot ? 2000 :
+        contre && announcedCapot? 1000:
+            surContre? 640:
+                contre ? 320:
+                    announcedCapot ? 500 : 160;
+    const winScore= surContre && announcedCapot ? 2000 :
+        contre && announcedCapot? 1000:
+            surContre? 640:
+                contre ? 320:
+                    announcedCapot ? 500 : 250;
+
+    const _nsScore = nsPenalty ? 0: ewPenalty ? failScore :
+        team === 'ns' && capot ? 162 :
+            capot? 0 :
+                (nsScore !== undefined ? Number(nsScore) : 162 - ewScore)
+    ;
+    const _ewScore = ewPenalty ? 0 : nsPenalty ? failScore :
+        team === 'ew' && capot ? 162 :
+            capot ? 0 :
+                (ewScore !== undefined ? Number(ewScore) : 162 - nsScore);
     const validForm = !(_nsScore < 0 || _ewScore < 0);
-    const nsFail = validForm && team === 'ns' && _nsScore < (amount===500?162+nsBelote:amount);
-    const ewFail = validForm && team === 'ew' && _ewScore < (amount===500?162+ewBelote:amount);
-    if(contre) {
-        const inStake = announcedCapot && surContre? 2000:
-            announcedCapot ? 1000 :
-                surContre ? 640 : 320;
-        return {
-            nsScore: _nsScore,
-            ewScore: _ewScore,
-            effectiveNsScore: validForm && (ewFail || (team === 'ns' && !nsFail)) ? inStake + ewBelote + nsBelote : 0,
-            effectiveEwScore: validForm && (nsFail || (team === 'ew' && !ewFail)) ? inStake + ewBelote + nsBelote : 0,
-            nsFail,
-            ewFail,
-            validForm
-        };
-    }
-    if(capot){ //TODO refactor to unify capot and contre sections
-        const score = (
-            announcedCapot && surContre ? 2000 :
-                announcedCapot && contre ? 1000 :
-                    announcedCapot ? 500 : 250
-        ) + nsBelote + ewBelote;
-        return {
-            effectiveNsScore: team === 'ns' ? score : 0,
-            effectiveEwScore: team === 'ew' ? score : 0,
-            validForm:true
-        }
-    }
-    const inStake = (amount === 500?amount: 160);
-    const effectiveNsScore = nsFail ? 0 : ewFail ? inStake+ewBelote+nsBelote : Math.round(_nsScore/10)*10 ;
-    const effectiveEwScore = ewFail ? 0 : nsFail ? inStake+nsBelote+ewBelote : Math.round(_ewScore/10)*10 ;
+    const nsFail = nsPenalty || validForm && (
+        team === 'ew' && contre ? _ewScore + ewBelote >= amount :
+            team==='ns' && announcedCapot ? !capot : team === 'ns' && _nsScore + nsBelote < amount
+    );
+    const ewFail = ewPenalty || validForm && (
+        team === 'ns' && contre ? _nsScore + nsBelote >= amount:
+            team === 'ew' && announcedCapot ? ! capot : team==='ew' && _ewScore + ewBelote < amount
+    );
+    const nsPoints = team === 'ns' && capot ?
+        winScore + nsBelote + ewBelote:
+        capot? 0: Math.round(_nsScore / 10) * 10 + nsBelote;
+    const ewPoints = team === 'ew' && capot ?
+        winScore + nsBelote + ewBelote:
+        capot? 0: Math.round(_ewScore / 10) * 10 + ewBelote;
+
+    const effectiveNsScore = nsFail ? 0 : ewFail ? failScore + ewBelote + nsBelote : nsPoints;
+    const effectiveEwScore = ewFail ? 0 : nsFail ? failScore + nsBelote + ewBelote : ewPoints;
+
+
     return {
         nsScore: _nsScore,
         ewScore: _ewScore,
-        effectiveNsScore,
-        effectiveEwScore,
         nsFail,
         ewFail,
+        effectiveEwScore,
+        effectiveNsScore,
         validForm
-    }
-
+    };
 };
-
 
 const maineLogic = (component, repository) => {
 

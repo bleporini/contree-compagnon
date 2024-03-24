@@ -150,7 +150,7 @@ test('Normal maine ok by belote, score from ns + belote ew', () => {
             effectiveNsScore: 70,
             effectiveEwScore: 110,
             nsScore: 72,
-            ewScore: 110,
+            ewScore: 90,
             nsFail:false,
             ewFail:false,
             validForm:true
@@ -186,7 +186,7 @@ test('Normal maine ok by belote, score from ns + belote ew, round up', () => {
             effectiveNsScore: 70,
             effectiveEwScore: 120,
             nsScore: 67,
-            ewScore: 115,
+            ewScore: 95,
             nsFail:false,
             ewFail:false,
             validForm:true
@@ -309,7 +309,7 @@ test('Normal maine fail + belote, score from ew', () => {
         effectiveNsScore: 180,
         effectiveEwScore: 0,
         nsScore: 73,
-        ewScore: 109,
+        ewScore: 89,
         nsFail:false,
         ewFail:true,
         validForm:true
@@ -366,12 +366,18 @@ test('Normal maine ok, capot', () => {
   }
 }        
         `);
-    expect(computeScore({
-        ...state,
-        capot:true
-    })).toStrictEqual({
+    expect(
+        computeScore({
+            ...state,
+            capot:true
+        })
+    ).toStrictEqual({
         effectiveNsScore: 0,
         effectiveEwScore: 250,
+        nsScore: 0,
+        ewScore: 162,
+        nsFail:false,
+        ewFail:false,
         validForm:true
     });
 
@@ -401,6 +407,10 @@ test('Normal maine ok, capot + belote', () => {
     })).toStrictEqual({
         effectiveNsScore: 0,
         effectiveEwScore: 270,
+        nsScore: 0,
+        ewScore: 162,
+        nsFail:false,
+        ewFail:false,
         validForm:true
     });
 
@@ -430,6 +440,10 @@ test('Normal maine ok, capot + belote lost', () => {
     })).toStrictEqual({
         effectiveNsScore: 0,
         effectiveEwScore: 270,
+        nsScore: 0,
+        ewScore: 162,
+        nsFail:false,
+        ewFail:false,
         validForm:true
     });
 });
@@ -457,6 +471,10 @@ test('Normal maine, ns penalty', () => {
     })).toStrictEqual({
         effectiveNsScore: 0,
         effectiveEwScore: 160,
+       ewFail: false,
+       ewScore: 160,
+       nsFail: true,
+       nsScore: 0,
         validForm:true
     });
 });
@@ -484,6 +502,10 @@ test('Normal maine, ew penalty', () => {
     })).toStrictEqual({
         effectiveNsScore: 160,
         effectiveEwScore: 0,
+        ewFail: true,
+        ewScore: 0,
+        nsFail: false,
+        nsScore: 160,
         validForm:true
     });
 });
@@ -575,6 +597,10 @@ test('Advertized capot ok', () => {
     })).toStrictEqual({
         effectiveNsScore: 0,
         effectiveEwScore: 500,
+        nsScore: 0,
+        ewScore: 162,
+        nsFail:false,
+        ewFail:false,
         validForm:true
     });
 });
@@ -664,7 +690,7 @@ test('Advertized capot fail + belote lost, score from ns', () => {
         effectiveNsScore: 520,
         effectiveEwScore: 0,
         nsScore: 12,
-        ewScore: 170,
+        ewScore: 150,
         nsFail:false,
         ewFail:true,
         validForm:true
@@ -695,7 +721,7 @@ test('Advertized capot fail + belote, score from ns', () => {
     })).toStrictEqual({
         effectiveNsScore: 520,
         effectiveEwScore: 0,
-        nsScore: 32,
+        nsScore: 12,
         ewScore: 150,
         nsFail:false,
         ewFail:true,
@@ -727,6 +753,10 @@ test('Advertized capot ok + belote', () => {
     })).toStrictEqual({
         effectiveNsScore: 0,
         effectiveEwScore: 520,
+        nsScore: 0,
+        ewScore: 162,
+        nsFail:false,
+        ewFail:false,
         validForm:true
     });
 });
@@ -755,6 +785,10 @@ test('Advertized capot ok + belote lost', () => {
     })).toStrictEqual({
         effectiveNsScore: 0,
         effectiveEwScore: 520,
+        nsScore: 0,
+        ewScore: 162,
+        nsFail:false,
+        ewFail:false,
         validForm:true
     });
 });
@@ -854,7 +888,7 @@ test('Advertized capot contre fail+belote, score from ns', () => {
     })).toStrictEqual({
         effectiveNsScore: 0,
         effectiveEwScore: 1020,
-        nsScore: 172,
+        nsScore: 152,
         ewScore: 10,
         nsFail: true,
         ewFail: false,
@@ -891,7 +925,7 @@ test('Advertized capot contre ok + belote', () => {
         effectiveEwScore: 0,
         nsFail:false,
         ewFail:false,
-        nsScore: 182,
+        nsScore: 162,
         ewScore: 0,
         validForm:true
     });
@@ -997,7 +1031,7 @@ test('Contre ok, score from ns', () => {
         effectiveNsScore: 320,
         effectiveEwScore: 0,
         nsFail:false,
-        ewFail:false,
+        ewFail:true,
         nsScore: 101,
         ewScore: 61,
         validForm:true
@@ -1031,7 +1065,7 @@ test('Contre ok, capot', () => {
         effectiveNsScore: 320,
         effectiveEwScore: 0,
         nsFail:false,
-        ewFail:false,
+        ewFail:true,
         nsScore: 162,
         ewScore: 0,
         validForm:true
@@ -1066,8 +1100,8 @@ test('Contre ok + belote, score from ns', () => {
         effectiveNsScore: 340,
         effectiveEwScore: 0,
         nsFail:false,
-        ewFail:false,
-        nsScore: 121,
+        ewFail:true,
+        nsScore: 101,
         ewScore: 61,
         validForm:true
     });
@@ -1101,9 +1135,84 @@ test('Contre ok + belote lost, score from ew', () => {
         effectiveNsScore: 340,
         effectiveEwScore: 0,
         nsFail:false,
-        ewFail:false,
+        ewFail:true,
         nsScore: 101,
-        ewScore: 81,
+        ewScore: 61,
         validForm:true
     });
 });
+
+test('Surcontre ok, score from ns', () => {
+    const state = JSON.parse(
+        `
+{
+  "positions": {
+    "Calypso ": "north",
+    "Brice": "south",
+    "Alessandra ": "west",
+    "Delphine ": "east"
+  },
+  "annonce":  {
+      "amount": 100,
+      "suit": "club",
+      "player": "Calypso ",
+      "contre": {
+        "player": "Alessandra "
+      },
+      "surContre": {
+        "player": "Calypso"
+       }
+    }
+}        
+        `);
+    expect(computeScore({
+        ...state,
+        nsScore: 101,
+    })).toStrictEqual({
+        effectiveNsScore: 640,
+        effectiveEwScore: 0,
+        nsFail:false,
+        ewFail:true,
+        nsScore: 101,
+        ewScore: 61,
+        validForm:true
+    });
+});
+
+test('Surcontre fail, score from ns', () => {
+    const state = JSON.parse(
+        `
+{
+  "positions": {
+    "Calypso ": "north",
+    "Brice": "south",
+    "Alessandra ": "west",
+    "Delphine ": "east"
+  },
+  "annonce":  {
+      "amount": 100,
+      "suit": "club",
+      "player": "Calypso ",
+      "contre": {
+        "player": "Alessandra "
+      },
+      "surContre": {
+        "player": "Calypso"
+       }
+    }
+}        
+        `);
+    expect(computeScore({
+        ...state,
+        nsScore: 99,
+    })).toStrictEqual({
+        effectiveNsScore: 0,
+        effectiveEwScore: 640,
+        nsFail:true,
+        ewFail:false,
+        nsScore: 99,
+        ewScore: 63,
+        validForm:true
+    });
+});
+
