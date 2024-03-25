@@ -223,6 +223,23 @@ const loadAnnonces = (app, container) => {
         }
         if (state.stage === stages.annoncesEnd) paintAnnoncesEnd();
 
+        const appendCell = (tr, content) => {
+            const td = document.createElement('td');
+            td.innerHTML = content;
+            tr.appendChild(td);
+        };
+
+        document.querySelectorAll('tbody#history tr').forEach(e => e.remove());
+        const historyTbl = document.getElementById('history');
+
+        state.history.forEach(({player, amount, suit = ''}) => {
+            const tr = document.createElement('tr');
+            appendCell(tr, player);
+            appendCell(tr, amount);
+            appendCell(tr, suit === '' ? '' : suitElement(suit));
+            historyTbl.appendChild(tr);
+        });
+
     };
     repaint();
 

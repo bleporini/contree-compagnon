@@ -124,6 +124,13 @@ const annoncesLogic = (component, repository) => {
         currentPlayer: findNextPlayer(state, state.currentPlayer)
     });
 
+    const addHistoryItem = (state, annonce) => {
+        const {history= []} = state;
+        return {
+            ...state,
+            history: [annonce, ...history]
+        }
+    };
 
     component.addEventListener(
         Events.passe.event,
@@ -132,12 +139,12 @@ const annoncesLogic = (component, repository) => {
                 const passe = state.passe ? state.passe +1: 1;
                 if ((state.annonce && passe === 3) || passe > 3){
                     return {
-                        ...state,
+                        ...addHistoryItem(state, {player:state.currentPlayer, amount: 'Passe'}),
                         passe,
                         stage:stages.annoncesEnd
                     }
                 }else return {
-                    ...state,
+                    ...addHistoryItem(state, {player:state.currentPlayer, amount: 'Passe'}),
                     passe: passe ? passe:0,
                     currentPlayer: findNextPlayer(state, state.currentPlayer)
                 };
@@ -148,13 +155,14 @@ const annoncesLogic = (component, repository) => {
 
     component.addEventListener(
         Events.annonce.event,
-        ({detail: {amount, suit, player}}) => {
+        ({detail: annonce}) => {
             repository.withState(state => {
                 return {
-                    ...setNextPlayer(state),
-                    annonce: {
-                        amount, suit, player
-                    },
+                    ...addHistoryItem(
+                        setNextPlayer(state),
+                        annonce
+                    ),
+                    annonce,
                     passe:0
                 }
             });
@@ -166,7 +174,10 @@ const annoncesLogic = (component, repository) => {
         Events.contre.event,
         () => {
             repository.withState(state => ({
-                    ...setNextPlayer(state),
+                    ...addHistoryItem(
+                        setNextPlayer(state),
+                        {player: state.currentPlayer, amount:'Contré'}
+                    ),
                     annonce: {
                         ...state.annonce,
                         contre: {
@@ -183,7 +194,10 @@ const annoncesLogic = (component, repository) => {
         Events.surContre.event,
         () => {
             repository.withState(state => ({
-                    ...setNextPlayer(state),
+                    ...addHistoryItem(
+                        setNextPlayer(state),
+                        {player: state.currentPlayer, amount:'Sur contré'}
+                    ),
                     annonce: {
                         ...state.annonce,
                         surContre: {
@@ -226,6 +240,7 @@ const annoncesLogic = (component, repository) => {
                     ...state,
                     currentPlayer: state.players[state.firstStartPosition],
                     annonce: undefined,
+                    history:[],
                     stage: stages.annonces,
                     passe:0
                 };
