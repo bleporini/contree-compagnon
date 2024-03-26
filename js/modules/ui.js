@@ -133,7 +133,7 @@ const loadAnnonces = (app, container) => {
 
     const repaint = () => {
         const state = app.state();
-        const {currentPlayer, players, firstStartPosition} = state;
+        const {currentPlayer, players, firstStartPosition, history= []} = state;
         document.getElementById('currentPlayer').innerHTML = currentPlayer;
         document.getElementById('partance').innerHTML = players[firstStartPosition];
 
@@ -232,7 +232,7 @@ const loadAnnonces = (app, container) => {
         document.querySelectorAll('tbody#history tr').forEach(e => e.remove());
         const historyTbl = document.getElementById('history');
 
-        state.history.forEach(({player, amount, suit = ''}) => {
+        history.forEach(({player, amount, suit = ''}) => {
             const tr = document.createElement('tr');
             appendCell(tr, player);
             appendCell(tr, amount);
