@@ -103,6 +103,7 @@ const initNextMaine = state => {
     const nextStartingPosition = nextPositions[firstStartPosition];
     return {
         ...newState,
+        history: [],
         stage: stages.annonces,
         firstStartPosition: nextStartingPosition,
         currentPlayer: state.players[nextStartingPosition],
