@@ -320,6 +320,23 @@ const computeScore = ({
     };
 };
 
+const appendScore = ({score = {maines: [], total: {ns: 0, ew: 0}}}, maine) => {
+    score.maines.push(maine);
+    score.total = score.maines.reduce(
+        ({ns: nsTotal, ew: ewTotal}, {ns, ew}) => ({
+            ns: nsTotal + ns,
+            ew: ewTotal + ew
+        })
+    );
+    return score;
+};
+
+const updateScore = (maines) =>
+    maines.reduce(
+        (score, maine) => appendScore(Object.keys(score).length === 0 ? score : {score}, maine),
+        {}
+    );
+
 const maineLogic = (component, repository) => {
 
     const maineRoles = ({annonce: {player}, positions}) => {
@@ -327,18 +344,18 @@ const maineLogic = (component, repository) => {
         return ['north', 'south'].includes(position) ? ['ns', 'ew'] : ['ew', 'ns'];
     };
 
-    const appendScore = ({score = {maines: [], total: {ns: 0, ew: 0}}}, maine) => {
-        score.maines.push(maine);
-        score.total = score.maines.reduce(
-            ({ns: nsTotal, ew: ewTotal}, {ns, ew}) => ({
-                ns: nsTotal + ns,
-                ew: ewTotal + ew
-            })
-        );
-        return score;
-    };
 
 
+    component.addEventListener(
+        Events.maineScoreUpdated.event,
+        ({detail: maines}) => {
+            repository.withState(state => ({
+                ...state,
+                score: updateScore(maines)
+            }));
+            component.dispatchEvent(Events.scoreUpdated.buildEvent());
+        }
+    );
 
     component.addEventListener(
         Events.maineFinished.event,
@@ -380,7 +397,6 @@ const maineLogic = (component, repository) => {
                 )
 
             })
-
     );
 };
 
@@ -426,6 +442,6 @@ const logic = {
     }
 };
 
-export {dropAnnoncesToUndo, computeScore};
+export {dropAnnoncesToUndo, computeScore, updateScore};
 
 export default logic;

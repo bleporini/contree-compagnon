@@ -38,6 +38,8 @@ const Events = {
     maineNsScoreEntered: buildEventValue('maineNsScoreEntered'),
     maineEwScoreEntered: buildEventValue('maineEwScoreEntered'),
     maineScoreComputed: buildEventValue('maineScoreComputed'),
+    maineScoreUpdated: buildEventValue('maineScoreUpdated'),
+    scoreUpdated: buildEventValue('scoreUpdated'),
     all : () => Object.keys(Events)
         .filter(k => k !== 'all')
         

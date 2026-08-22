@@ -1,4 +1,28 @@
-import {computeScore} from "./logic";
+import {computeScore, updateScore} from "./logic";
+
+test('Compute new score updated', () => {
+    const maines = JSON.parse(`
+      [
+        {
+          "ns": 0,
+          "ew": 160
+        },
+        {
+          "ns": 40,
+          "ew": 122
+        }
+      ]    
+    `);
+
+    const score = updateScore(maines);
+    console.log(score);
+    const {total: {ns, ew}} = score;
+
+    expect({ns, ew})
+        .toStrictEqual({
+            ns:40, ew:282
+        });
+});
 
 test('Normal maine ok, score from ew', () => {
     const state = JSON.parse(

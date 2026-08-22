@@ -93,6 +93,69 @@ const surContreSign = '<i class="fa-solid text-danger fa-triangle-exclamation"><
 const loadScore = (app) => {
     document.getElementById('debug').onclick = downloadDebug;
 
+    const createEditButtonCell = (nsCell, ewCell) => {
+        const i = document.createElement('i');
+        i.classList.add('bi', 'bi-pencil-square');
+        const editButtonCell = document.createElement('td');
+        editButtonCell.appendChild(i);
+        const createEditCell = (cell) => {
+            const span = cell.getElementsByTagName('span')[0];
+            span.style.display = 'none';
+
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.inputmode = 'numeric';
+            input.classList.add('form-control');
+            input.value = span.innerHTML;
+            cell.append(input);
+            return input;
+        };
+        const saveBtn = document.createElement('i');
+        saveBtn.classList.add('bi', 'bi-floppy-fill');
+        saveBtn.style.display = 'none';
+        editButtonCell.append(saveBtn);
+
+        const restoreCell = cell => {
+            const input = cell.getElementsByTagName('input')[0];
+            const span = cell.getElementsByTagName('span')[0];
+            span.innerHTML = input.value;
+            input.remove();
+            span.style.display = '';
+            saveBtn.style.display = 'none';
+        };
+
+        const computeNewMainesSet = () => {
+            const rows = document.querySelectorAll('#scoreBody tr');
+            return Array.from(rows).reduce(
+                (acc, tr) => {
+                    const cells = tr.getElementsByTagName('td');
+                    return [...acc, {
+                        ns: Number(cells[0].firstChild.textContent),
+                        ew: Number(cells[1].firstChild.textContent)
+                    }]
+                },
+                []
+            )
+        };
+
+        saveBtn.onclick = () => {
+            restoreCell(nsCell);
+            restoreCell(ewCell);
+            const evt = Events.maineScoreUpdated.buildEvent(computeNewMainesSet());
+            app.dispatchEvent(evt);
+        };
+
+
+        i.onclick = e => {
+            createEditCell(nsCell);
+            createEditCell(ewCell);
+            i.style.display = 'none';
+            saveBtn.style.display = '';
+        };
+
+        return editButtonCell;
+    };
+
     const {
         players:{north, south, east, west},
         score:{maines, total:{ns:nsTotal, ew:ewTotal}} = {maines:[], total:{ns:0, ew:0}}
@@ -104,9 +167,15 @@ const loadScore = (app) => {
         const row = document.createElement('tr');
         const nsCell = document.createElement('td');
         const ewCell = document.createElement('td');
-        nsCell.append(ns);
-        ewCell.append(ew);
-        row.append(nsCell, ewCell);
+        const nsSpan = document.createElement('span');
+        const ewSpan = document.createElement('span');
+
+        nsSpan.append(ns);
+        ewSpan.append(ew);
+        nsCell.append(nsSpan);
+        ewCell.append(ewSpan);
+        row.append(nsCell, ewCell, createEditButtonCell(nsCell, ewCell));
+        console.log('yes2');
         scoreBody.append(row);
     };
     maines.forEach(createScoreRow);
@@ -456,6 +525,11 @@ const ui = {
         app.addEventListener(
             Events.annoncesStarted.event,
             (e) => navigator.resetToPage('annonces.html')
+        );
+
+        app.addEventListener(
+            Events.scoreUpdated.event,
+            () => navigator.resetToPage('score.html')
         );
 
         document.addEventListener('init', ({target: {id: pageId}}) => {
