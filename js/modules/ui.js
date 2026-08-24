@@ -90,6 +90,11 @@ const suitElement = s =>
 const contreSign = '<i class="fa-solid fa-circle-exclamation" style="color: orange;"></i>';
 const surContreSign = '<i class="fa-solid text-danger fa-triangle-exclamation"></i>';
 
+const clearScoreTable = app => {
+    document.querySelectorAll('#scoreBody tr').forEach(n => n.remove());
+
+};
+
 const loadScore = (app) => {
     document.getElementById('debug').onclick = downloadDebug;
 
@@ -529,7 +534,10 @@ const ui = {
 
         app.addEventListener(
             Events.scoreUpdated.event,
-            () => navigator.resetToPage('score.html')
+            () => {
+                clearScoreTable(app);
+                loadScore(app);
+            }
         );
 
         document.addEventListener('init', ({target: {id: pageId}}) => {
