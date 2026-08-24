@@ -290,7 +290,7 @@ const loadAnnonces = (app, container) => {
             else paintRegularAnnonce(amount, suit, player);
         } else {
             annonceElem.innerHTML = 'Pas d\'annonce';
-            [surContreButton, contreButton]
+            [surContreButton, contreButton, okButton]
                 .forEach(btn => btn.disabled=true);
             [passeButton, ...annoncesBtns]
                 .forEach(btn => btn.disabled=false);
