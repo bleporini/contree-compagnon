@@ -211,6 +211,7 @@ const loadAnnonces = (app, container) => {
         document.getElementById('currentPlayer').innerHTML = currentPlayer;
         document.getElementById('partance').innerHTML = players[firstStartPosition];
 
+        annoncesBtns.forEach(b => b.style.display = '');
 
         const isCurrentPlayerInTheSameTeamAsAnnonce = () => {
             const {
@@ -226,24 +227,18 @@ const loadAnnonces = (app, container) => {
         };
 
         const paintRegularAnnonce = (amount, suit, player) => {
-            const toDisable = [
-                surContreButton,
-                okButton,
-                ...annoncesBtns.filter(btn =>
-                    Number(btn.getAttributeNode('data-amount').value) <= amount
-                )
-            ];
-            const toEnable = [
-                passeButton,
-                ...annoncesBtns.filter(btn =>
-                    Number(btn.getAttributeNode('data-amount').value) > amount)
-            ];
+            if (isCurrentPlayerInTheSameTeamAsAnnonce()) contreButton.disabled=true;
+            else contreButton.disabled=false;
 
-            if (isCurrentPlayerInTheSameTeamAsAnnonce()) toDisable.push(contreButton);
-            else toEnable.push(contreButton);
-
-            toDisable.forEach(btn => btn.disabled =  true);
-            toEnable.forEach(btn => btn.disabled=false);
+            okButton.disabled = true;
+            surContreButton.disabled = true;
+            passeButton.disabled = false;
+            annoncesBtns.filter(btn =>
+                Number(btn.getAttributeNode('data-amount').value) <= amount
+            ).forEach(btn => btn.style.display =  'none');
+            annoncesBtns.filter(btn =>
+                Number(btn.getAttributeNode('data-amount').value) > amount
+            ).forEach(btn => btn.style.display = '' );
 
             annonceElem.innerHTML =
                 `${player} : ${amount} ${suitElement(suit)}`;
